@@ -85,3 +85,74 @@
   const top=$('.back-top'); top?.addEventListener('click',()=>scrollTo({top:0,behavior:reduced?'auto':'smooth'}));
   $$('[data-year]').forEach(el=>el.textContent=new Date().getFullYear());
 })();
+/* =========================================================
+   ARIYO — 404 CURSOR INTERACTION
+   ========================================================= */
+
+(() => {
+
+    const errorPage = document.querySelector(".error-page");
+    const cursorGlow = document.querySelector(".error-cursor-glow");
+
+    if (!errorPage || !cursorGlow) return;
+
+
+    /*
+     * Only activate the cursor effect
+     * on devices with a precise pointer.
+     */
+
+    const finePointer = window.matchMedia(
+        "(pointer: fine)"
+    );
+
+
+    if (!finePointer.matches) return;
+
+
+    let animationFrame;
+
+
+    window.addEventListener(
+        "pointermove",
+        (event) => {
+
+            cancelAnimationFrame(animationFrame);
+
+
+            animationFrame = requestAnimationFrame(() => {
+
+                cursorGlow.style.left =
+                    `${event.clientX}px`;
+
+                cursorGlow.style.top =
+                    `${event.clientY}px`;
+
+                errorPage.classList.add(
+                    "error-cursor-active"
+                );
+
+            });
+
+        },
+        {
+            passive: true
+        }
+    );
+
+
+    window.addEventListener(
+        "pointerleave",
+        () => {
+
+            errorPage.classList.remove(
+                "error-cursor-active"
+            );
+
+        },
+        {
+            passive: true
+        }
+    );
+
+})();
